@@ -1,0 +1,12 @@
+
+.DS_Store
+Интернет-магазин ТЗ.pdf
+venv/
+__pycache__/
+*.py[cod]
+.env
+db_backup.sqlite3
+media/
+.idea/
+.vscode/
+celery_broker/

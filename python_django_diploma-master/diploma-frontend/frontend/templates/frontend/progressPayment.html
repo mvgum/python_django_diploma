@@ -35,3 +35,28 @@
     </div>
   </div>
 {% endblock %}
+
+{% block mixins %}
+<script>
+    // Получаем ID заказа из URL (например, /progress-payment/?orderId=5)
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId');
+
+    if (orderId) {
+        // Проверяем статус каждые 2 секунды
+        const interval = setInterval(() => {
+            fetch(`/api/order/${orderId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Если статус изменился с 'pending' на 'paid' или 'error'
+                    if (data.status !== 'pending') {
+                        clearInterval(interval);
+                        // Перенаправляем в историю заказов
+                        location.assign('/history-order/');
+                    }
+                })
+                .catch(err => console.error("Ошибка проверки статуса:", err));
+        }, 2000); // 2000 мс = 2 секунды
+    }
+</script>
+{% endblock %}

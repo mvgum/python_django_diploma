@@ -1,0 +1,482 @@
+[
+{
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$v1kshRsVFGK0FMshqEYy41$G1q9ti//CBjDkWtAODC0GniPtPoCSar3asHPfnypAgA=",
+    "last_login": "2026-10-26T17:56:09.040Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Петр",
+    "last_name": "Иванов",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-10-24T08:05:41Z",
+    "full_name": "Петр Иванов",
+    "phone": "+79001234567",
+    "email": "example@yandex.ru",
+    "avatar": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$waagLt0ysZpzRWID4cJQTS$GZ3vK+iDHOHX6uChk7bBuq8GuxYahpgLIWJ+xtM9ZiY=",
+    "last_login": "2026-10-25T06:21:01.449Z",
+    "is_superuser": false,
+    "username": "user",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-25T06:20:59.517Z",
+    "full_name": "Марат",
+    "phone": null,
+    "email": "user@example.com",
+    "avatar": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$7Vb32bsrXurbY6YXr5rlJB$AQxQux+PHUm02EjR08gERJcgXc75xAXFKtFbgF/p814=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "bayer",
+    "first_name": "Покупатель",
+    "last_name": "Тестовый",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-10-27T12:00:41Z",
+    "full_name": "Покупатель Тестовый",
+    "phone": "+79002345678",
+    "email": "bayer@example.com",
+    "avatar": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 1,
+  "fields": {
+    "is_deleted": false,
+    "name": "компьютер",
+    "parent": null,
+    "image": ""
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 2,
+  "fields": {
+    "is_deleted": false,
+    "name": "телевизор",
+    "parent": null,
+    "image": ""
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 3,
+  "fields": {
+    "is_deleted": false,
+    "name": "Telephone",
+    "parent": null,
+    "image": ""
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 1,
+  "fields": {
+    "is_deleted": false,
+    "category": 3,
+    "title": "xiaomi",
+    "short_description": "xiaomi red me",
+    "description": "New telephone new xiaomi red me",
+    "price": "10000.00",
+    "sort_index": 0,
+    "purchases_count": 0,
+    "limited_edition": true
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 2,
+  "fields": {
+    "is_deleted": false,
+    "category": 1,
+    "title": "Lenovo",
+    "short_description": "Ноутбук Lenovo",
+    "description": "Ноутбук Lenovo",
+    "price": "20000.00",
+    "sort_index": 0,
+    "purchases_count": 0,
+    "limited_edition": true
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 3,
+  "fields": {
+    "is_deleted": false,
+    "category": 2,
+    "title": "Samsung",
+    "short_description": "TV Samsung",
+    "description": "TV Samsung",
+    "price": "15000.00",
+    "sort_index": 0,
+    "purchases_count": 0,
+    "limited_edition": false
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 4,
+  "fields": {
+    "is_deleted": false,
+    "category": 1,
+    "title": "Lenovo",
+    "short_description": "ноутбук",
+    "description": "ноутбук новый",
+    "price": "45000.00",
+    "sort_index": 0,
+    "purchases_count": 0,
+    "limited_edition": true
+  }
+},
+{
+  "model": "orders.shopsettings",
+  "pk": 1,
+  "fields": {
+    "express_delivery_cost": "500.00",
+    "free_delivery_threshold": "2000.00",
+    "standard_delivery_cost": "200.00"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T11:18:20.987Z",
+    "status": "pending",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "25000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T11:20:06.390Z",
+    "status": "pending",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "10000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T11:56:31.824Z",
+    "status": "pending",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "20000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T11:58:23.645Z",
+    "status": "pending",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "15000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T12:20:06.894Z",
+    "status": "paid",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "10000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T13:27:04.144Z",
+    "status": "pending",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "10000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T14:21:56.175Z",
+    "status": "pending",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "10000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T14:56:14.012Z",
+    "status": "pending",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Пушкина, д. 1",
+    "total_cost": "10000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T15:36:10.916Z",
+    "status": "paid",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Усть-Качкинское с/п,  СНТ \"Восход-2\"",
+    "address": "участок 221",
+    "total_cost": "10000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created_at": "2026-10-25T16:07:27.494Z",
+    "status": "paid",
+    "delivery_type": "standard",
+    "payment_type": "online",
+    "city": "Москва",
+    "address": "ул. Ленина, 3",
+    "total_cost": "10000.00",
+    "payment_error": null,
+    "is_deleted": false
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 1,
+  "fields": {
+    "order": 1,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 2,
+  "fields": {
+    "order": 1,
+    "product": 3,
+    "quantity": 1,
+    "price": "15000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 3,
+  "fields": {
+    "order": 2,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 4,
+  "fields": {
+    "order": 3,
+    "product": 2,
+    "quantity": 1,
+    "price": "20000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 5,
+  "fields": {
+    "order": 4,
+    "product": 3,
+    "quantity": 1,
+    "price": "15000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 6,
+  "fields": {
+    "order": 5,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 7,
+  "fields": {
+    "order": 6,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 8,
+  "fields": {
+    "order": 7,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 9,
+  "fields": {
+    "order": 8,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 10,
+  "fields": {
+    "order": 9,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 11,
+  "fields": {
+    "order": 10,
+    "product": 1,
+    "quantity": 1,
+    "price": "10000.00"
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "user"
+    ],
+    "session_key": null
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "session_key": null
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 3,
+  "fields": {
+    "user": null,
+    "session_key": "j89upzsio5v8r0n91mfwqmdi2d7jlgd3"
+  }
+}
+]

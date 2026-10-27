@@ -1,101 +1,90 @@
 var mix = {
-    methods: {
-        getProfile() {
-            this.getData(`/api/profile/`).then(data => {
-                this.fullName = data.fullName
-                this.avatar = data.avatar
-                this.phone = data.phone
-                this.email = data.email
-            }).catch(() => {
-                console.warn('Ошибка при получении профиля')
-            })
-        },
-        changeProfile () {
-            if(!this.fullName.trim().length || !this.phone.trim().length || !this.email.trim().length) {
-                alert('В форме присутствуют незаполненные поля')
-                return
-            }
+	methods: {
+		loadProfile() {
+			this.getData('/api/profile/')
+				.then(data => {
+					this.fullName = data.full_name || '';
+					this.phone = data.phone || '';
+					this.email = data.email || '';
+					if (data.avatar) {
+						this.avatar = { src: data.avatar, alt: 'Аватар' };
+					}
+				})
+				.catch(err => console.error("Ошибка загрузки профиля:", err));
+		},
+		changeProfile() {
+			const formData = new FormData();
+			// В Django REST Framework поля ожидаются под теми же именами, что и в модели
+			formData.append('full_name', this.fullName);
+			formData.append('phone', this.phone);
+			formData.append('email', this.email);
 
-            this.postData('/api/profile/', {
-                fullName: this.fullName,
-                avatar: this.avatar,
-                phone: this.phone,
-                email: this.email
-            }).then(({data}) => {
-                this.fullName = data.fullName
-                this.avatar = data.avatar
-                this.phone = data.phone
-                this.email = data.email
-               alert('Успешно сохранено')
-            }).catch(() => {
-                console.warn('Ошибка при обновлении профиля')
-            })
-        },
-        changePassword () {
-            if (
-                !this.passwordCurrent.trim().length ||
-                !this.password.trim().length ||
-                !this.passwordReply.trim().length ||
-                this.password !== this.passwordReply
-            ) {
-                alert('В форме присутствуют незаполненные поля или пароли не совпадают')
-                return
-            }
-            this.postData('/api/profile/password/')
-              .then(({data}) => {
-                   alert('Успешно сохранено')
-                    this.passwordCurrent = ''
-                    this.password = ''
-                    this.passwordReply = ''
-                }).catch(() => {
-                    console.warn('Ошибка при сохранении пароля')
-                })
-        },
-        setAvatar (event) {
-            const target = event.target
-            const file = target.files?.[0] ?? null
-            if (!file) return
+			const fileInput = document.querySelector('#avatar');
+			if (fileInput && fileInput.files.length > 0) {
+				formData.append('avatar', fileInput.files[0]);
+			}
 
-            const formData = new FormData()
-            formData.append('avatar', file)
+			// Используем чистый axios, чтобы он сам выставил правильный boundary для multipart
+			axios.post('/api/profile/', formData, {
+				headers: {
+					'X-CSRFToken': this.getCookie('csrftoken'),
+					// Content-Type указывать НЕ НАДО, Axios сделает это сам!
+				}
+			})
+			.then(({ data }) => {
+				alert(data.message);
+				this.loadProfile();
+			})
+			.catch(error => {
+				console.error("Ошибка обновления профиля:", error.response.data);
+				alert("Ошибка: " + JSON.stringify(error.response.data));
+			});
+		},
+		changePassword() {
+			const payload = {
+				passwordCurrent: this.passwordCurrent,
+				password: this.password,
+				passwordReply: this.passwordReply
+			};
 
-            this.postData('/api/profile/avatar/', formData, {'Content-Type': 'multipart/form-data'}).then((data) => {
-                this.avatar = data.url
-            }).catch(() => {
-                 console.warn('Ошибка при обновлении изображения')
-            })
-        },
-        getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        },
-        clearAvatar() {
-            this.avatar = null
-        }
-    },
-    created() {
-        this.getProfile();
-    },
-    data() {
-        return {
-            fullName: null,
-            phone: null,
-            email: null,
-            avatar: null,
-            password: '',
-            passwordCurrent: '',
-            passwordReply: ''
-        }
-    },
+			this.postData('/api/profile/change-password/', payload)
+				.then(({ data }) => {
+					alert(data.message);
+					this.passwordCurrent = '';
+					this.password = '';
+					this.passwordReply = '';
+				})
+				.catch(error => {
+					console.error("Ошибка смены пароля:", error);
+					alert("Ошибка: " + JSON.stringify(error.response.data));
+				});
+		},
+		setAvatar(event) {
+			const file = event.target.files[0];
+			if (file) {
+				if (file.size > 2 * 1024 * 1024) {
+					alert("Размер аватарки не должен превышать 2 Мб");
+					return;
+				}
+				this.avatar = { src: URL.createObjectURL(file), alt: 'Аватар' };
+			}
+		},
+		clearAvatar() {
+			this.avatar = null;
+		}
+	},
+	mounted() {
+		this.loadProfile();
+	},
+	data() {
+		return {
+			fullName: '',
+			phone: '',
+			email: '',
+			avatar: null,
+			passwordCurrent: '',
+			password: '',
+			passwordReply: ''
+		}
+	}
 }

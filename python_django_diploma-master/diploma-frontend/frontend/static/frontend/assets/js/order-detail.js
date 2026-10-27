@@ -1,73 +1,82 @@
 var mix = {
 	methods: {
-		getOrder(orderId) {
-			if(typeof orderId !== 'number') return
+		loadOrder() {
+			// Получаем ID заказа из URL (например, /orders/10/ -> 10)
+			const urlParts = window.location.pathname.split('/');
+			const orderId = urlParts[urlParts.length - 2];
+
 			this.getData(`/api/order/${orderId}/`)
 				.then(data => {
-					this.orderId = data.id
-					this.createdAt = data.createdAt
-					this.fullName = data.fullName
-					this.phone = data.phone
-					this.email = data.email
-					this.deliveryType = data.deliveryType
-					this.city = data.city
-					this.address = data.address
-					this.paymentType = data.paymentType
-					this.status = data.status
-					this.totalCost = data.totalCost
-					this.products = data.products
-					console.log(this.products)
-					if (typeof data.paymentError !== 'undefined') {
-						this.paymentError = data.paymentError
-					}
+					this.orderId = data.id;
+					this.createdAt = data.createdAt;
+					this.fullName = data.fullName;
+					this.phone = data.phone;
+					this.email = data.email;
+					this.deliveryType = data.deliveryType === 'express' ? 'Экспресс-доставка' : 'Обычная доставка';
+					this.paymentType = data.paymentType === 'online' ? 'Онлайн картой' : 'Онлайн со случайного счета';
+					this.city = data.city;
+					this.address = data.address;
+					this.status = data.status === 'paid' ? 'Оплачен' : (data.status === 'pending' ? 'Ожидает оплаты' : 'Ошибка оплаты');
+					this.totalCost = data.totalCost;
+					this.products = data.products;
+					this.paymentError = data.paymentError;
 				})
+				.catch(err => console.error("Ошибка загрузки заказа:", err));
+		},
+		loadPreview() {
+			// (Эта функция для страницы оформления, можно оставить)
+			this.getData('/api/orders/preview/')
+				.then(data => {
+					this.orderPreview = data;
+					this.products = data.products;
+				})
+				.catch(err => console.error("Ошибка загрузки предпросмотра:", err));
 		},
 		confirmOrder() {
-			if (this.orderId !== null) {
-				this.postData(`/api/order/${this.orderId}/`, { ...this })
-					.then(({ data: { orderId } }) => {
-						alert('Заказ подтвержден')
-						location.replace(`/payment/${orderId}/`)
-					})
-					.catch(() => {
-						console.warn('Ошибка при подтверждения заказа')
-					})
-			}
-		},
-		auth() {
-			const username = document.querySelector('#username').value
-			const password = document.querySelector('#password').value
-			this.postData('/api/sign-in/', JSON.stringify({ username, password }))
-				.then(({ data, status }) => {
-					location.assign(`/orders/${this.orderId}`)
+			// (Эта функция для страницы оформления, можно оставить)
+			const cityInput = document.querySelector('#city');
+			const addressInput = document.querySelector('#address');
+			const payload = {
+				city: cityInput ? cityInput.value : 'Москва',
+				address: addressInput ? addressInput.value : 'Не указан',
+				deliveryType: this.deliveryType || 'standard',
+				paymentType: this.paymentType || 'online'
+			};
+			this.postData('/api/orders/', payload)
+				.then(({ data }) => {
+					if (data.orderId) {
+						location.assign(`/payment/${data.orderId}/`);
+					}
 				})
-				.catch(() => {
-					alert('Ошибка авторизации')
-				})
+				.catch(err => console.error("Ошибка создания заказа:", err));
 		}
 	},
 	mounted() {
-		if(location.pathname.startsWith('/orders/')) {
-			const orderId = location.pathname.replace('/orders/', '').replace('/', '')
-			this.orderId = orderId.length ? Number(orderId) : null
-			this.getOrder(this.orderId);
+		// Если мы на странице оформления заказа, грузим предпросмотр
+		if (window.location.pathname === '/orders/') {
+			this.loadPreview();
+		}
+		// Если мы на странице детального просмотра заказа, грузим сам заказ
+		if (window.location.pathname.includes('/orders/') && window.location.pathname !== '/orders/') {
+			this.loadOrder();
 		}
 	},
 	data() {
 		return {
-			orderId: null,
-			createdAt: null,
-			fullName: null,
-			phone: null,
-			email: null,
-			deliveryType: null,
-			city: null,
-			address: null,
-			paymentType: null,
-			status: null,
-			totalCost: null,
+			orderPreview: { totalCost: 0 },
 			products: [],
-			paymentError: null,
+			orderId: null,
+			createdAt: '',
+			fullName: '',
+			phone: '',
+			email: '',
+			city: '',
+			address: '',
+			deliveryType: '',
+			paymentType: '',
+			status: '',
+			totalCost: 0,
+			paymentError: null
 		}
-	},
+	}
 }

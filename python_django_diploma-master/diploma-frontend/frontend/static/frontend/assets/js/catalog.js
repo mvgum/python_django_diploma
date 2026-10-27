@@ -40,40 +40,41 @@ var mix = {
                         console.warn('Ошибка получения тегов')
                 })
         },
-        getCatalogs(page = 1) {
-            const PAGE_LIMIT = 20
-            const tags = this.topTags.filter(tag => !!tag.selected).map(tag => tag.id)
-            const min = document.querySelector('input[name=minPrice]').value
-            const max =  document.querySelector('input[name=maxPrice]').value
+		getCatalogs(page = 1) {
+			// Собираем все параметры из фильтров и сортировки
+			const params = {
+				page: page,
+				title: this.filter.name || '',
+//				minPrice: this.filter.minPrice || '',
+//				maxPrice: this.filter.maxPrice || '',
+				sort: this.selectedSort ? this.selectedSort.id : 'popular',
+				sortType: this.selectedSort ? this.selectedSort.selected : 'dec'
+			};
 
-            if (min !== 0) {
-                this.filter.minPrice = min
-            }
-            if (max !== 50000) {
-                this.filter.maxPrice = max
-            }
-            this.getData("/api/catalog/", {
-                filter: {
-                    ...this.filter,
-                    minPrice: min,
-                    maxPrice: max
-                },
-                currentPage: page,
-                category: this.category,
-                sort: this.selectedSort ? this.selectedSort.id : null,
-                sortType: this.selectedSort ? this.selectedSort.selected : null,
-                tags,
-                limit: PAGE_LIMIT
-            })
-                .then(data => {
-                    this.catalogCards = data.items
-                    this.currentPage = data.currentPage
-                    this.lastPage = data.lastPage
+			// Преобразуем {name: '...'} в {'filter[name]': '...'}
+			const queryParams = {};
+			for (const key in params) {
+				if (['name', 'minPrice', 'maxPrice'].includes(key)) {
+					queryParams[`filter[${key}]`] = params[key];
+				} else {
+					queryParams[key] = params[key];
+				}
+			}
 
-                }).catch(() => {
-                    console.warn('Ошибка при получении каталога')
-                })
-        }
+			this.getData('/api/catalog/', queryParams)
+				.then(data => {
+					// ИСПРАВЛЕНО: Берем массив из поля results
+					this.catalogCards = data.results || [];
+					this.currentPage = page;
+					// Считаем общее количество страниц (20 товаров на страницу)
+					this.lastPage = Math.ceil((data.count || 0) / 20);
+
+					if (this.catalogCards.length === 0) {
+						console.warn("Товары не найдены по заданным фильтрам");
+					}
+				})
+				.catch(err => console.error("Ошибка каталога:", err));
+		}
     },
     mounted() {
         this.selectedSort = this.sortRules?.[1]
